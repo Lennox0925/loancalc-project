@@ -95,20 +95,50 @@
       <button type="button" onclick="reset()">重置輸入</button>
     </div>
   </form>
-  <div id="result" style="margin-top: 20px;"></div>
+  <div id="result" style="margin-top: 20px;">
+
+    <h1>貸款金額 : 1000 總利息支出 :444455 總金額 : 11000000</h1>
+
+    <table id="resultTable">
+      <thead>
+        <tr>
+          <th>期別</th>
+          <th>攤還本金</th>
+          <th>攤還利息</th>
+          <th>月付金</th>
+          <th>貸款餘額</th>
+        </tr>
+      </thead>
+      <tbody>
+
+
+
+      </tbody>
+    </table>
+
+
+
+  </div>
+
 
   <script>
     const principalEl = document.querySelector("#principal");
     const rateEl = document.querySelector("#rate");
     const timeEl = document.querySelector("#time");
-    const calcEl = document.querySelector("#calc")
+    const calcEl = document.querySelector("#calc");
+    const resultE1 = document.querySelector("#result")
+    const resultTableEl = document.querySelector("#resultTable tbody")
 
-    console.log(principalEl, rateEl, timeEl, calcEl)
+
+    //resultE1.innerHTML = "";
+
+    console.log(principalEl, rateEl, timeEl, calcEl, resultE1, resultTableEl)
 
     function reset() {
       principalEl.innerHTML = "";
       rateEl.innerHTML = "";
       timeEl.innerHTML = "";
+
     }
 
     calcEl.addEventListener("click", () => {
@@ -124,37 +154,30 @@
       // 1.計算每個月應還本金 
 
       let month_pay = Math.round(principal / months);
-      //let month_pay1 = principal / months
-
-
-
-
-      //2.計算每個月利息
+      let tempHtml = "";
       for (let i = 0; i < months; i++) {
         //計算每個月利息
         let interest = Math.round(principal * month_rate);
-        // let interest1 = principal * month_rate
-        //let qq = Math.round((interest1 + month_pay1))
+
         //本金減去每月應還本金
         principal -= month_pay;
         // 每月應還(本金+利息) , 剩餘貸款
+
+        let tempHtml = "<tr>";
         if (i == months - 1) {
-          console.log(i + 1, month_pay, interest, month_pay + interest + principal, 0);
 
+          tempHtml += `<td> ${i + 1}</td><td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest + principal}</td><td>${0}</td>`;
+          // tempHtml = `${i + 1} - ${month_pay} - ${interest} - ${month_pay + interest + principal} - 0`
         } else {
-          console.log(i + 1, month_pay, interest, month_pay + interest, principal);
-
+          tempHtml += `<td> ${i + 1}</td><td>${month_pay}</td><td>${interest}</td><td>${month_pay + interest}</td><td>${principal}</td>`;
+          //tempHtml = `${i + 1} - ${month_pay} - ${interest} - ${month_pay + interest} -${principal}`
         }
-
-
-        //console.log(i + 1, month_pay, interest, qq, principal)
-
-
-
+        tempHtml += "</tr>";
+        resultTableEl.innerHTML += tempHtml;
       }
 
-      console.log(principal, rate, time, months, month_rate, month_pay);
-    })
+
+    });
 
 
   </script>
