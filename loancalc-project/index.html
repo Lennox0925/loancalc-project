@@ -74,6 +74,22 @@
     thead {
       background-color: #f2f2f2;
     }
+
+    #tableContainer {
+
+      max-height: :400px;
+      overflow-y: : auto;
+      border: 1px solid black;
+      width: 60%;
+      margin: 0 auto;
+
+    }
+
+    @media screen and (max-width: 600px) {
+      #tableContainer {
+        width: 100%;
+
+      }
   </style>
 </head>
 
@@ -82,22 +98,24 @@
 
   <form action="">
     <label for="principal">本金 (元):</label>
-    <input type="number" id="principal" name="principal" value="1000000" required>
+    <input type="number" id="principal" name="principal" placeholder="1000000" required>
     <br>
     <label for="rate">年利率 (%):</label>
-    <input type="number" id="rate" name="rate" step="0.01" value="2.5" required>
+    <input type="number" id="rate" name="rate" step="0.01" placeholder="2.5" required>
     <br>
     <label for="time">貸款期限 (年):</label>
-    <input type="number" id="time" name="time" value="20" required>
+    <input type="number" id="time" name="time" placeholder="20" required>
     <br>
     <div class="buttons">
       <button type="button" id="calc">計算利息</button>
-      <button type="button" onclick="reset()">重置輸入</button>
+      <button type="button" onclick="reset_input()">重置輸入</button>
     </div>
   </form>
   <div id="result" style="margin-top: 20px;">
+  </div>
 
-    <h1>貸款金額 : 1000 總利息支出 :444455 總金額 : 11000000</h1>
+
+  <div id="tableContainer">
 
     <table id="resultTable">
       <thead>
@@ -117,7 +135,6 @@
     </table>
 
 
-
   </div>
 
 
@@ -130,15 +147,16 @@
     const resultTableEl = document.querySelector("#resultTable tbody")
 
 
-    //resultE1.innerHTML = "";
+
 
     console.log(principalEl, rateEl, timeEl, calcEl, resultE1, resultTableEl)
 
-    function reset() {
-      principalEl.innerHTML = "";
-      rateEl.innerHTML = "";
-      timeEl.innerHTML = "";
-
+    function reset_input() {
+      principalEl.value = "";
+      rateEl.value = "";
+      timeEl.value = "";
+      resultE1.innerHTML = "";
+      resultTableEl.innerHTML = "";
     }
 
     calcEl.addEventListener("click", () => {
@@ -155,10 +173,12 @@
 
       let month_pay = Math.round(principal / months);
       let tempHtml = "";
+
+      let total_interest = 0;
       for (let i = 0; i < months; i++) {
         //計算每個月利息
         let interest = Math.round(principal * month_rate);
-
+        total_interest += interest;
         //本金減去每月應還本金
         principal -= month_pay;
         // 每月應還(本金+利息) , 剩餘貸款
@@ -173,8 +193,12 @@
           //tempHtml = `${i + 1} - ${month_pay} - ${interest} - ${month_pay + interest} -${principal}`
         }
         tempHtml += "</tr>";
+
         resultTableEl.innerHTML += tempHtml;
       }
+
+      resultE1.innerHTML = `<h2>貸款金額 : ${principalEl.value} 總利息支出 : ${total_interest} 總金額 : ${Number(principalEl.value) + Number(total_interest)}</h2>`
+      resultTableEl.innerHTML += tempHtml;
 
 
     });
